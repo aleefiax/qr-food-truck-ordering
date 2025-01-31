@@ -2,9 +2,7 @@ package com.foodtruck.qr_food_truck_ordering.controller;
 
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,16 +15,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.foodtruck.qr_food_truck_ordering.model.FoodOrder;
 import com.foodtruck.qr_food_truck_ordering.repository.OrderRepository;
+import com.foodtruck.qr_food_truck_ordering.service.OrderService;
 
 @RestController // Marks this class as a REST API controller
 @RequestMapping("/orders") // Base URL for all endpoints in this class
 public class OrderController {
 
-    private final OrderRepository orderRepository;
+    private final OrderService orderService;
 
     // Constructor
-    public OrderController(OrderRepository orderepository) {
-        this.orderRepository = orderepository;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     // Create a new order
@@ -36,46 +35,43 @@ public class OrderController {
     // data
     @PostMapping
     public ResponseEntity<FoodOrder> createOrder(@RequestBody FoodOrder order) {
-        FoodOrder savedOrder = orderRepository.save(order); // save
+        FoodOrder savedOrder = orderService.createOrder(order); // save
         return ResponseEntity.status(HttpStatus.CREATED).body(savedOrder); // return saved order
     }
 
     // Get all orders
     @GetMapping
     public List<FoodOrder> getAllOrders() {
-        return orderRepository.findAll();
+        return orderService.getAllOrders();
     }
 
     // Get order by ID
     // @PathVariable binds the id in the URL to the method parameter
     @GetMapping("/{Id}")
     public ResponseEntity<FoodOrder> getOrderById(@PathVariable Long id) {
-        return orderRepository.findById(id)
+        return orderService.getOrderById(id)
                 .map(order -> ResponseEntity.ok(order)) // Found the order
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build()); // Order not found
     }
 
-    // Update order status
-    @PutMapping("/{Id}")
+    @PutMapping("/{id}")
     public ResponseEntity<FoodOrder> updateOrderStatus(@PathVariable Long id, @RequestBody String newStatus) {
-        return orderRepository.findById(id)
-                .map(order -> {
-                    order.setStatus(newStatus); // Update the status
-                    orderRepository.save(order); // Save the updated order
-                    return ResponseEntity.ok(order); // Return updated order
-                })
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build()); // If order not found
+        try {
+            FoodOrder updatedOrder = orderService.updateOrderStatus(id, newStatus);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
-    // Delete an order
-    @DeleteMapping("/{Id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
-        return orderRepository.findById(id)
-                .map(order -> {
-                    orderRepository.delete(order); // Delete the order
-                    return ResponseEntity.ok().<Void>build(); // Return 200 OK
-                })
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build()); // If order not found
+        try {
+            orderService.deleteOrder(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 }
