@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.foodtruck.qr_food_truck_ordering.model.Order;
+import com.foodtruck.qr_food_truck_ordering.model.FoodOrder;
 import com.foodtruck.qr_food_truck_ordering.repository.OrderRepository;
 
 @RestController // Marks this class as a REST API controller
-@RequestMapping("/api") // Base URL for all endpoints in this class
+@RequestMapping("/orders") // Base URL for all endpoints in this class
 public class OrderController {
 
     private final OrderRepository orderRepository;
@@ -35,21 +35,21 @@ public class OrderController {
     // responseEntity is used to retuen a response, including status code and the
     // data
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order savedOrder = orderRepository.save(order); // save
+    public ResponseEntity<FoodOrder> createOrder(@RequestBody FoodOrder order) {
+        FoodOrder savedOrder = orderRepository.save(order); // save
         return ResponseEntity.status(HttpStatus.CREATED).body(savedOrder); // return saved order
     }
 
     // Get all orders
     @GetMapping
-    public List<Order> getAllOrders() {
+    public List<FoodOrder> getAllOrders() {
         return orderRepository.findAll();
     }
 
     // Get order by ID
     // @PathVariable binds the id in the URL to the method parameter
     @GetMapping("/{Id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
+    public ResponseEntity<FoodOrder> getOrderById(@PathVariable Long id) {
         return orderRepository.findById(id)
                 .map(order -> ResponseEntity.ok(order)) // Found the order
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build()); // Order not found
@@ -57,7 +57,7 @@ public class OrderController {
 
     // Update order status
     @PutMapping("/{Id}")
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestBody String newStatus) {
+    public ResponseEntity<FoodOrder> updateOrderStatus(@PathVariable Long id, @RequestBody String newStatus) {
         return orderRepository.findById(id)
                 .map(order -> {
                     order.setStatus(newStatus); // Update the status

@@ -12,7 +12,7 @@ import jakarta.persistence.*;
 @Entity // Marks class as JPA Entity
 @Getter
 @Setter
-public class Order {
+public class FoodOrder {
 
     @Id // Marks this field as the primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY) // how primary key is generated
