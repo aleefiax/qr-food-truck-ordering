@@ -12,4 +12,4 @@ public class HelloController {
     public String sayHello() {
         return "Hello to the foodtruck!";
     }
-}
+} 

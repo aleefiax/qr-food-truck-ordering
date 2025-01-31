@@ -2,9 +2,7 @@ package com.foodtruck.qr_food_truck_ordering.controller;
 
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.foodtruck.qr_food_truck_ordering.model.FoodOrder;
 import com.foodtruck.qr_food_truck_ordering.repository.OrderRepository;
 
-@RestController // Marks this class as a REST API controller
+@RestController // Marks this class as a REST API controller.
 @RequestMapping("/orders") // Base URL for all endpoints in this class
 public class OrderController {
 

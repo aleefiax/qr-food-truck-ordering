@@ -14,7 +14,7 @@ import jakarta.persistence.*;
 @Setter
 public class FoodOrder {
 
-    @Id // Marks this field as the primary key
+    @Id // Marks this field as the primary key.
     @GeneratedValue(strategy = GenerationType.IDENTITY) // how primary key is generated
     private Long id;
 
