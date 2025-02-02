@@ -28,7 +28,7 @@ public class OrderItemService {
     public OrderItem createOrderItem(OrderItem orderItem) {
 
         // validating to check if Item exists before reating OrderItem
-        MenuItem menuItem = menuItemRepository.findById(orderItem.getMenuItem().getId())
+        MenuItem menuItem = menuItemRepository.findByName(orderItem.getMenuItem().getName())
                 .orElseThrow(() -> new RuntimeException("Menu item not found"));
 
         // checking if quantity is valid
@@ -39,6 +39,8 @@ public class OrderItemService {
         // calculating price
         double calculatedPrice = menuItem.getPrice() * orderItem.getQuantity();
         orderItem.setPrice(calculatedPrice); // Set the calculated price
+
+        orderItem.setMenuItem(menuItem);
 
         return orderItemRepository.save(orderItem);
     }
@@ -54,7 +56,7 @@ public class OrderItemService {
     public OrderItem updateOrderItem(Long id, OrderItem updatedOrderItem) {
 
         // validating to check if Item exists before reating OrderItem
-        MenuItem menuItem = menuItemRepository.findById(updatedOrderItem.getMenuItem().getId())
+        MenuItem menuItem = menuItemRepository.findByName(updatedOrderItem.getMenuItem().getName())
                 .orElseThrow(() -> new RuntimeException("Menu item not found"));
 
         // checking if quantity is valid
