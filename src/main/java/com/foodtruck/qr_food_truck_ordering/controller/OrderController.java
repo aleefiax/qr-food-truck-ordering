@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.foodtruck.qr_food_truck_ordering.model.FoodOrder;
-import com.foodtruck.qr_food_truck_ordering.repository.OrderRepository;
 import com.foodtruck.qr_food_truck_ordering.service.OrderService;
 
 @RestController // Marks this class as a REST API controller

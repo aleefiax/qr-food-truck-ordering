@@ -3,9 +3,9 @@ package com.foodtruck.qr_food_truck_ordering.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import jakarta.persistence.Entity;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -19,7 +19,11 @@ public class FoodOrder {
     private Long id;
 
     private String customerName;
-    private String items;
+
+    @OneToMany(cascade = CascadeType.ALL) // One FoodOrder can have many OrderItems
+    @JoinColumn(name = "food_order_id") // Foreign key in OrderItem table
+    private List<OrderItem> items = new ArrayList<>();
+
     private String status; // pending, preparing, ready, completed
 
     @Column(nullable = false) // additional proeprties like col names and also constraints
