@@ -14,17 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.foodtruck.qr_food_truck_ordering.model.FoodOrder;
-import com.foodtruck.qr_food_truck_ordering.repository.OrderRepository;
-import com.foodtruck.qr_food_truck_ordering.service.OrderService;
+import com.foodtruck.qr_food_truck_ordering.service.FoodOrderService;
 
 @RestController // Marks this class as a REST API controller
 @RequestMapping("/orders") // Base URL for all endpoints in this class
-public class OrderController {
+public class FoodOrderController {
 
-    private final OrderService orderService;
+    private final FoodOrderService orderService;
 
     // Constructor
-    public OrderController(OrderService orderService) {
+    public FoodOrderController(FoodOrderService orderService) {
         this.orderService = orderService;
     }
 
