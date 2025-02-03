@@ -8,12 +8,18 @@ const QRCodeGenerator = () => {
   useEffect(() => {
     const fetchQRCode = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/qr/generate", {
-          responseType: "arraybuffer",
-        });
+        const response = await axios.get(
+          "http://localhost:8080/api/qr/generate",
+          {
+            responseType: "arraybuffer",
+          }
+        );
 
         const qrImage = `data:image/png;base64,${btoa(
-          new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), "")
+          new Uint8Array(response.data).reduce(
+            (data, byte) => data + String.fromCharCode(byte),
+            ""
+          )
         )}`;
 
         setQrCode(qrImage);

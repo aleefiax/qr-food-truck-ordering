@@ -1,13 +1,17 @@
-import React from 'react';
-import './App.css';
-import QRCodeGenerator from './QRCodeGenerator';
+// src/App.tsx
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "./HomePage"; // Import the HomePage component
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <QRCodeGenerator />
-    </div>
+    <Router>
+      <Routes>
+        {/* Route for the HomePage */}
+        <Route path="/" element={<HomePage />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
