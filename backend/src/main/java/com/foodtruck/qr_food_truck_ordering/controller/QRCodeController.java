@@ -2,6 +2,9 @@ package com.foodtruck.qr_food_truck_ordering.controller;
 
 import com.foodtruck.qr_food_truck_ordering.service.QRCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,16 +15,18 @@ public class QRCodeController {
     @Autowired // Inject the QRCodeService
     private QRCodeService qrCodeService;
 
-    // POST request to generate the QR code
-    @PostMapping("/generate")
-    public ResponseEntity<byte[]> generateQRCode(@RequestBody String url) {
+    @GetMapping("generate")
+    public ResponseEntity<byte[]> generateQRCode() {
         try {
-            byte[] qrCodeImage = qrCodeService.generateQRCode(url, 300, 300); // Generate the QR code with 300x300 size
-            return ResponseEntity.ok()
-                    .header("Content-Type", "image/png")
-                    .body(qrCodeImage); // Return the image as the response body
+            String staticUrl = "http://localhost:8080"; // Static URL
+            byte[] qrCode = qrCodeService.generateQRCode(staticUrl, 200, 200); // Generate QR code
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_PNG);
+            return new ResponseEntity<>(qrCode, headers, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build(); // In case of error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 }

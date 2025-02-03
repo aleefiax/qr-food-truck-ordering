@@ -1,36 +1,34 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const QRCodeGenerator = () => {
-  const [qrCode, setQrCode] = useState<string | null>(null); // State to hold the QR code image as a data URL
+  const [qrCode, setQrCode] = useState<string | null>(null);
 
-  const generateQRCode = async () => {
-    const url = "https://yourfrontend.com/menu"; // The URL to encode in the QR code
+  useEffect(() => {
+    const fetchQRCode = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/qr/generate", {
+          responseType: "arraybuffer",
+        });
 
-    try {
-      // Send the URL to the backend to generate the QR code
-      const response = await axios.post('http://localhost:8080/api/qr/generate', url, {
-        responseType: 'arraybuffer', // Important to get the image data as binary
-      });
+        const qrImage = `data:image/png;base64,${btoa(
+          new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), "")
+        )}`;
 
-      // Convert the binary image data to a base64 string
-      const base64Image = Buffer.from(response.data, 'binary').toString('base64');
-      setQrCode(`data:image/png;base64,${base64Image}`); // Set the QR code image as a base64 string
-    } catch (error) {
-      console.error('Error generating QR code:', error);
-    }
-  };
+        setQrCode(qrImage);
+      } catch (error) {
+        console.error("Failed to load QR Code", error);
+      }
+    };
+
+    fetchQRCode();
+  }, []);
 
   return (
     <div>
-      <h1>Generate QR Code</h1>
-      <button onClick={generateQRCode}>Generate QR Code</button>
-      {qrCode && (
-        <div>
-          <h2>Scan this QR code:</h2>
-          <img src={qrCode} alt="Generated QR Code" />
-        </div>
-      )}
+      <h2>Scan this QR Code</h2>
+      {qrCode ? <img src={qrCode} alt="QR Code" /> : <p>Loading QR Code...</p>}
     </div>
   );
 };
